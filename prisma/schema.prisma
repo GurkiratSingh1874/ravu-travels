@@ -14,3 +14,100 @@ model Admin {
   password  String
   createdAt DateTime @default(now())
 }
+
+model Car {
+  id           String       @id @default(cuid())
+  name         String
+  seats        Int
+  isAvailable  Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  category     CarCategory
+  transmission Transmission
+  images       String[]
+  fuelType     FuelType
+  bookings     Booking[]
+  tours        Tour[]       @relation("CarToTour")
+}
+
+model Tour {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  coverImage  String
+  featured    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  days        Int
+  gallery     String[]
+  nights      Int
+  bookings    Booking[]
+  cars        Car[]     @relation("CarToTour")
+}
+
+model Booking {
+  id             String        @id @default(cuid())
+  customerName   String
+  phone          String
+  pickupLocation String
+  travelDate     DateTime
+  message        String?
+  tourId         String
+  carId          String
+  createdAt      DateTime      @default(now())
+  tripType       TripType
+  status         BookingStatus @default(PENDING)
+  car            Car           @relation(fields: [carId], references: [id])
+  tour           Tour          @relation(fields: [tourId], references: [id])
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  review    String
+  rating    Int
+  image     String?
+  createdAt DateTime @default(now())
+}
+
+model ContactQuery {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  email     String?
+  message   String
+  createdAt DateTime @default(now())
+}
+
+enum TripType {
+  TOUR
+  ONE_WAY
+  ROUND_TRIP
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum CarCategory {
+  SEDAN
+  SUV
+  MUV
+  HATCHBACK
+  LUXURY
+  TEMPO_TRAVELLER
+}
+
+enum Transmission {
+  MANUAL
+  AUTOMATIC
+}
+
+enum FuelType {
+  PETROL
+  DIESEL
+  CNG
+  ELECTRIC
+  HYBRID
+}

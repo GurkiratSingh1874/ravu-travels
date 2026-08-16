@@ -12,6 +12,8 @@ import Button from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
 import ImageUpload from "./image-upload";
 import { updateCarAction } from "../actions/update-car";
+import { toast } from "react-hot-toast";
+import Image from "next/image";
 
 type Props = {
   car?: CarFormData & {
@@ -45,6 +47,35 @@ export default function CarForm({ car }: Props) {
 });
 
   async function onSubmit(data: CarFormData) {
+    if (!data.name.trim()) {
+  toast.error("Please enter car name.");
+  return;
+}
+
+if (!data.category) {
+  toast.error("Please select a category.");
+  return;
+}
+
+if (!data.seats || data.seats < 1) {
+  toast.error("Seats must be at least 1.");
+  return;
+}
+
+if (!data.fuelType) {
+  toast.error("Please select fuel type.");
+  return;
+}
+
+if (!data.transmission) {
+  toast.error("Please select transmission.");
+  return;
+}
+
+if (images.length === 0) {
+  toast.error("Please upload at least one image.");
+  return;
+}
     const formData = new FormData();
 
     formData.append("name", data.name);
@@ -60,16 +91,19 @@ export default function CarForm({ car }: Props) {
     startTransition(async () => {
       if (car) {
       await updateCarAction(car.id, formData);
+      toast.success("Car updated successfully!");
+      router.refresh();
       return;
     }
 
     await createCarAction(formData);
-
+      toast.success("Car created successfully!");
       reset();
       setImages([]);
       router.refresh();
     });
   }
+
 
   return (
     <form

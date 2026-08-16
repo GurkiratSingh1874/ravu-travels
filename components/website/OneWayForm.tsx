@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import {toast} from "react-hot-toast";
+import { createRecord } from "@/features/records/actions/create-record";
 
 type Car = {
   id: string;
@@ -19,7 +21,37 @@ export default function OneWayForm({ cars }: Props) {
   const [date, setDate] = useState("");
   const [car, setCar] = useState("");
 
-  function bookNow() {
+  async function bookNow() {
+
+    if (!name.trim()) {
+  toast.error("Please enter your name.");
+  return;
+}
+
+if (!/^[6-9]\d{9}$/.test(phone)) {
+  toast.error("Please enter a valid 10-digit mobile number.");
+  return;
+}
+
+if (!pickup.trim()) {
+  toast.error("Please enter pickup location.");
+  return;
+}
+
+if (!drop.trim()) {
+  toast.error("Please enter drop location.");
+  return;
+}
+
+if (!date) {
+  toast.error("Please select travel date.");
+  return;
+}
+
+if (!car) {
+  toast.error("Please select a car.");
+  return;
+}
     const message = `Hello RAVU TRAVELS,
 
 I want to book a One Way Trip.
@@ -38,11 +70,27 @@ Please contact me.`;
 
     const whatsappNumber = "9988393184";
 
+    await createRecord({
+  customerName: name,
+  phone,
+
+  bookingType: "One Way",
+
+  tourName: null,
+  carName: car,
+
+  travelDate: date,
+
+  message,
+});
+ toast.success("Redirecting to WhatsApp...");
     window.open(
       `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`,
       "_blank"
     );
   }
+
+ 
 
   return (
     <div className="space-y-4">

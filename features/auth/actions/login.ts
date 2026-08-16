@@ -40,6 +40,9 @@ export async function loginAction(
   });
 
   const cookieStore = await cookies();
+  
+
+
 
   cookieStore.set("token", token, {
     httpOnly: true,
@@ -48,6 +51,8 @@ export async function loginAction(
     path: "/",
     maxAge: 60 * 60 * 24 * 7,
   });
+
+  
 
   return {
     success: true,

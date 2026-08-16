@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation";
+import { CalendarDays, CarFront, Fuel, Users } from "lucide-react";
+
 import { getPublicTourById } from "@/features/website/services/get-public-tour-by-id";
 import BookingForm from "@/components/website/BookingForm";
 
@@ -20,78 +22,151 @@ export default async function TourDetailsPage({
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-10">
+    <main className="bg-slate-50">
 
-      <img
-        src={tour.coverImage}
-        alt={tour.title}
-        className="w-full h-[500px] rounded-xl object-cover"
-      />
+      {/* Hero */}
 
-      <h1 className="text-4xl font-bold mt-8">
-        {tour.title}
-      </h1>
+      <section className="relative">
 
-      <p className="mt-4 text-lg text-gray-600">
-        {tour.description}
-      </p>
-
-      <div className="mt-6 text-xl font-semibold">
-        {tour.days} Days / {tour.nights} Nights
-      </div>
-
-      <h2 className="text-2xl font-bold mt-10">
-        Gallery
-      </h2>
-
-      <div className="grid md:grid-cols-3 gap-4 mt-5">
-        {tour.gallery.map((image, index) => (
-          <img
-            key={index}
-            src={image}
-            className="h-60 w-full rounded-lg object-cover"
-          />
-        ))}
-      </div>
-
-      <h2 className="text-2xl font-bold mt-10">
-        Available Cars
-      </h2>
-
-      <div className="grid md:grid-cols-3 gap-5 mt-5">
-        {tour.cars.map((car) => (
-          <div
-            key={car.id}
-            className="border rounded-lg p-4"
-          >
-            <img
-              src={car.images[0]}
-              className="h-40 w-full rounded object-cover"
-            />
-
-            <h3 className="mt-3 font-bold">
-              {car.name}
-            </h3>
-
-            <p>
-              {car.seats} Seats
-            </p>
-
-            <p>
-              {car.fuelType}
-            </p>
-
-            <p>
-              {car.transmission}
-            </p>
-          </div>
-        ))}
-      </div>
-      <BookingForm
-        tourTitle={tour.title}
-        cars={tour.cars}
+        <img
+          src={tour.coverImage}
+          alt={tour.title}
+          className="h-[70vh] w-full object-cover"
         />
 
-    </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+        <div className="absolute bottom-14 left-1/2 w-full max-w-7xl -translate-x-1/2 px-6 text-white">
+
+          <p className="mb-3 text-amber-400">
+            Premium Tour Package
+          </p>
+
+          <h1 className="heading text-5xl font-bold">
+            {tour.title}
+          </h1>
+
+          <div className="mt-5 flex flex-wrap gap-4">
+
+            <div className="flex items-center gap-2 rounded-full bg-white/15 px-5 py-3 backdrop-blur">
+              <CalendarDays size={18} />
+              {tour.days} Days / {tour.nights} Nights
+            </div>
+
+            <div className="flex items-center gap-2 rounded-full bg-white/15 px-5 py-3 backdrop-blur">
+              <CarFront size={18} />
+              {tour.cars.length} Cars
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <div className="mx-auto max-w-7xl px-6 py-16">
+
+        {/* Description */}
+
+        <section>
+
+          <h2 className="heading mb-5 text-3xl font-bold">
+            About this Tour
+          </h2>
+
+          <p className="max-w-4xl text-lg leading-8 text-slate-600">
+            {tour.description}
+          </p>
+
+        </section>
+
+        {/* Gallery */}
+
+        <section>
+
+          <h2 className="heading mb-8 text-3xl font-bold">
+            Gallery
+          </h2>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+            {tour.gallery.map((image, index) => (
+              <div
+                key={index}
+                className="overflow-hidden rounded-3xl"
+              >
+                <img
+                  src={image}
+                  className="h-72 w-full object-cover transition duration-500 hover:scale-110"
+                />
+              </div>
+            ))}
+
+          </div>
+
+        </section>
+
+        {/* Cars */}
+
+        <section>
+
+          <h2 className="heading mb-8 text-3xl font-bold">
+            Available Cars
+          </h2>
+
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+
+            {tour.cars.map((car) => (
+              <div
+                key={car.id}
+                className="overflow-hidden rounded-3xl bg-white shadow-lg transition hover:-translate-y-2 hover:shadow-xl"
+              >
+
+                <img
+                  src={car.images[0]}
+                  className="h-56 w-full object-cover"
+                />
+
+                <div className="space-y-4 p-6">
+
+                  <h3 className="text-2xl font-semibold">
+                    {car.name}
+                  </h3>
+
+                  <div className="space-y-3 text-slate-600">
+
+                    <div className="flex items-center gap-2">
+                      <Users size={18} />
+                      {car.seats} Seats
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Fuel size={18} />
+                      {car.fuelType}
+                    </div>
+
+                    <div>
+                      {car.transmission}
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+            ))}
+
+          </div>
+
+        </section>
+
+        <BookingForm
+          tourTitle={tour.title}
+          cars={tour.cars}
+        />
+
+      </div>
+
+    </main>
   );
 }

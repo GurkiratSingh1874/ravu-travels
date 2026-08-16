@@ -1,5 +1,6 @@
 import Navbar from "@/components/website/Navbar";
 import Footer from "@/components/website/Footer";
+import { Toaster } from "react-hot-toast";
 
 export default function WebsiteLayout({
   children,
@@ -10,7 +11,8 @@ export default function WebsiteLayout({
     <>
       <Navbar />
 
-      <main>{children}</main>
+      <main>{children}
+      </main>
 
       <Footer />
     </>

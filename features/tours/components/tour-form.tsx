@@ -9,9 +9,10 @@ import { useForm } from "react-hook-form";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { updateTourAction } from "../actions/update-tour";
+import Image from "next/image";
 
 import { TourFormData } from "../types/tour";
-
+import { toast } from "react-hot-toast";  
 type Car = {
   id: string;
   name: string;
@@ -46,7 +47,7 @@ export default function TourForm({cars,tour,}: Props) {
   );
 
   const router = useRouter();
-  const [isPending] = useTransition();
+  const [isPending,startTransition] = useTransition();
 
   const {
   register,
@@ -64,6 +65,40 @@ export default function TourForm({cars,tour,}: Props) {
   });
 
   async function onSubmit(data: TourFormData) {
+    if (!data.title.trim()) {
+  toast.error("Please enter tour title.");
+  return;
+}
+
+if (!data.description.trim()) {
+  toast.error("Please enter description.");
+  return;
+}
+
+if (!data.days || data.days < 1) {
+  toast.error("Days must be at least 1.");
+  return;
+}
+
+if (!data.nights || data.nights < 0) {
+  toast.error("Nights cannot be negative.");
+  return;
+}
+
+if (!coverImage) {
+  toast.error("Please upload a cover image.");
+  return;
+}
+
+if (gallery.length === 0) {
+  toast.error("Please upload at least one gallery image.");
+  return;
+}
+
+if (selectedCars.length === 0) {
+  toast.error("Please select at least one car.");
+  return;
+}
   const formData = new FormData();
 
   formData.append("title", data.title);
@@ -85,10 +120,16 @@ export default function TourForm({cars,tour,}: Props) {
 
   if (tour) {
   await updateTourAction(tour.id, formData);
+
+  toast.success("Tour updated successfully!");
+
+  router.refresh();
+
   return;
-    }
+}
 
   await createTourAction(formData);
+  toast.success("Tour created successfully!");
 
   reset();
 

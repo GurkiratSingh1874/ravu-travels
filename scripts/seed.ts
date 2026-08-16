@@ -10,22 +10,52 @@ async function main() {
     },
   });
 
-  if (existingAdmin) {
-    console.log("Admin already exists.");
-    return;
+  if (!existingAdmin) {
+    const hashedPassword = await bcrypt.hash("admin123", 10);
+
+    await prisma.admin.create({
+      data: {
+        name: "RAVU Owner",
+        email: "admin@ravutravels.com",
+        password: hashedPassword,
+      },
+    });
+
+    console.log("✅ Admin created.");
+  } else {
+    console.log("✅ Admin already exists.");
   }
 
-  const hashedPassword = await bcrypt.hash("admin123", 10);
+  const testimonialCount = await prisma.testimonial.count();
 
-  await prisma.admin.create({
-    data: {
-      name: "RAVU Owner",
-      email: "admin@ravutravels.com",
-      password: hashedPassword,
-    },
-  });
+  if (testimonialCount === 0) {
+    await prisma.testimonial.createMany({
+      data: [
+        {
+          name: "Aman Sharma",
+          review:
+            "Excellent service. Clean cars and professional drivers.",
+          rating: 5,
+        },
+        {
+          name: "Priya Verma",
+          review:
+            "Booked a Himachal tour. Everything was perfectly managed.",
+          rating: 5,
+        },
+        {
+          name: "Rahul Kapoor",
+          review:
+            "Very punctual and affordable. Highly recommended.",
+          rating: 5,
+        },
+      ],
+    });
 
-  console.log("Admin created successfully.");
+    console.log("✅ Testimonials created.");
+  } else {
+    console.log("✅ Testimonials already exist.");
+  }
 }
 
 main()

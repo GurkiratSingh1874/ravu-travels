@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createCar } from "@/features/cars/services/car.services";
-import { carSchema } from "@/features/cars/validations/car.schema";
+import { carSchema } from "@/features/cars/validations/car-schema";
 import { successResponse } from "@/lib/api-response";
 import { handleApiError } from "@/lib/api-error";
 

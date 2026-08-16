@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { loginAction } from "@/features/auth/actions/login";
-
 export default function LoginPage() {
   const router = useRouter();
 
@@ -20,21 +18,43 @@ export default function LoginPage() {
     e.preventDefault();
 
     setError("");
+    if (!email.trim()) {
+    setError("Please enter your email.");
+    return;
+  }
+
+  if (!/\S+@\S+\.\S+/.test(email)) {
+    setError("Please enter a valid email address.");
+    return;
+  }
+
+  if (!password.trim()) {
+    setError("Please enter your password.");
+    return;
+  }
     setLoading(true);
 
-    const result = await loginAction(
-      email,
-      password
-    );
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    const result = await response.json();
 
     setLoading(false);
 
-    if (!result.success) {
+    if (!response.ok) {
       setError(result.message);
       return;
     }
 
-    router.push("/admin/cars");
+    router.push("/admin");
     router.refresh();
   }
 
@@ -53,9 +73,7 @@ export default function LoginPage() {
           placeholder="Email"
           className="mb-4 w-full rounded border p-3"
           value={email}
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <input
@@ -63,9 +81,7 @@ export default function LoginPage() {
           placeholder="Password"
           className="mb-2 w-full rounded border p-3"
           value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
+          onChange={(e) => setPassword(e.target.value)}
         />
 
         {error && (
@@ -79,9 +95,7 @@ export default function LoginPage() {
           disabled={loading}
           className="w-full rounded bg-black py-3 text-white"
         >
-          {loading
-            ? "Signing in..."
-            : "Login"}
+          {loading ? "Signing in..." : "Login"}
         </button>
       </form>
     </main>

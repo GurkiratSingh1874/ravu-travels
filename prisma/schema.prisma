@@ -59,6 +59,18 @@ model Booking {
   tour           Tour          @relation(fields: [tourId], references: [id])
 }
 
+model Record {
+  id           String   @id @default(cuid())
+  customerName String
+  phone        String
+  bookingType  String
+  tourName     String?
+  carName      String?
+  travelDate   String?
+  message      String
+  createdAt    DateTime @default(now())
+}
+
 model Testimonial {
   id        String   @id @default(cuid())
   name      String

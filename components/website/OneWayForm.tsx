@@ -76,7 +76,7 @@ Please contact me.`;
 
   bookingType: "One Way",
 
-  tourName: null,
+  tourName: undefined,
   carName: car,
 
   travelDate: date,

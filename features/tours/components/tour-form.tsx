@@ -2,17 +2,18 @@
 
 import ImageUpload from "@/features/cars/components/image-upload";
 import { createTourAction } from "../actions/create-tour";
+import { updateTourAction } from "../actions/update-tour";
+
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
-import { updateTourAction } from "../actions/update-tour";
-import Image from "next/image";
 
 import { TourFormData } from "../types/tour";
-import { toast } from "react-hot-toast";  
+import { toast } from "react-hot-toast";
+
 type Car = {
   id: string;
   name: string;
@@ -20,143 +21,149 @@ type Car = {
 
 type Props = {
   cars: Car[];
-};
-
-type Props = {
-  cars: {
-    id: string;
-    name: string;
-  }[];
-
   tour?: any;
 };
 
-export default function TourForm({cars,tour,}: Props) {
+export default function TourForm({ cars, tour }: Props) {
+  const router = useRouter();
+
+  const [isPending, startTransition] = useTransition();
+
   const [featured, setFeatured] = useState(
-  tour?.featured ?? false
-    );
-  const [selectedCars, setSelectedCars] =
-  useState<string[]>(
+    tour?.featured ?? false
+  );
+
+  const [selectedCars, setSelectedCars] = useState<string[]>(
     tour?.cars?.map((car: any) => car.id) ?? []
   );
+
   const [coverImage, setCoverImage] = useState(
-  tour?.coverImage ?? ""
-  );
-  const [gallery, setGallery] = useState<string[]>(
-  tour?.gallery ?? []
+    tour?.coverImage ?? ""
   );
 
-  const router = useRouter();
-  const [isPending,startTransition] = useTransition();
+  const [gallery, setGallery] = useState<string[]>(
+    tour?.gallery ?? []
+  );
 
   const {
-  register,
-  handleSubmit,
-  reset,
+    register,
+    handleSubmit,
+    reset,
   } = useForm<TourFormData>({
-  defaultValues: tour
-    ? {
-        title: tour.title,
-        description: tour.description,
-        days: tour.days,
-        nights: tour.nights,
-      }
-    : undefined,
+    defaultValues: tour
+      ? {
+          title: tour.title,
+          description: tour.description,
+          days: tour.days,
+          nights: tour.nights,
+        }
+      : undefined,
   });
 
   async function onSubmit(data: TourFormData) {
     if (!data.title.trim()) {
-  toast.error("Please enter tour title.");
-  return;
-}
+      toast.error("Please enter tour title.");
+      return;
+    }
 
-if (!data.description.trim()) {
-  toast.error("Please enter description.");
-  return;
-}
+    if (!data.description.trim()) {
+      toast.error("Please enter description.");
+      return;
+    }
 
-if (!data.days || data.days < 1) {
-  toast.error("Days must be at least 1.");
-  return;
-}
+    if (!data.days || data.days < 1) {
+      toast.error("Days must be at least 1.");
+      return;
+    }
 
-if (!data.nights || data.nights < 0) {
-  toast.error("Nights cannot be negative.");
-  return;
-}
+    if (!data.nights || data.nights < 0) {
+      toast.error("Nights cannot be negative.");
+      return;
+    }
 
-if (!coverImage) {
-  toast.error("Please upload a cover image.");
-  return;
-}
+    if (!coverImage) {
+      toast.error("Please upload a cover image.");
+      return;
+    }
 
-if (gallery.length === 0) {
-  toast.error("Please upload at least one gallery image.");
-  return;
-}
+    if (gallery.length === 0) {
+      toast.error("Please upload at least one gallery image.");
+      return;
+    }
 
-if (selectedCars.length === 0) {
-  toast.error("Please select at least one car.");
-  return;
-}
-  const formData = new FormData();
+    if (selectedCars.length === 0) {
+      toast.error("Please select at least one car.");
+      return;
+    }
 
-  formData.append("title", data.title);
-  formData.append("description", data.description);
-  formData.append("days", data.days.toString());
-  formData.append("nights", data.nights.toString());
+    const formData = new FormData();
 
-  formData.append("featured", featured.toString());
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("days", data.days.toString());
+    formData.append("nights", data.nights.toString());
 
-  formData.append("coverImage", coverImage);
+    formData.append("featured", featured.toString());
 
-  selectedCars.forEach((id) => {
-    formData.append("cars", id);
-  });
+    formData.append("coverImage", coverImage);
 
-  gallery.forEach((image) => {
-    formData.append("gallery", image);
-  });
+    selectedCars.forEach((id) => {
+      formData.append("cars", id);
+    });
 
-  if (tour) {
-  await updateTourAction(tour.id, formData);
+    gallery.forEach((image) => {
+      formData.append("gallery", image);
+    });
 
-  toast.success("Tour updated successfully!");
+    startTransition(async () => {
+      try {
+        if (tour) {
+          await updateTourAction(tour.id, formData);
 
-  router.refresh();
+          toast.success("Tour updated successfully!");
 
-  return;
-}
+          router.refresh();
 
-  await createTourAction(formData);
-  toast.success("Tour created successfully!");
+          return;
+        }
 
-  reset();
+        await createTourAction(formData);
 
-  setSelectedCars([]);
-  setFeatured(false);
-  setCoverImage("");
-  setGallery([]);
+        toast.success("Tour created successfully!");
 
-  router.refresh();
-}
+        reset();
+        setSelectedCars([]);
+        setFeatured(false);
+        setCoverImage("");
+        setGallery([]);
+
+        router.refresh();
+      } catch (error) {
+        console.error(error);
+        toast.error("Something went wrong. Please try again.");
+      }
+    });
+  }
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-5"
     >
+      {/* Tour Name */}
       <Input
         placeholder="Tour Name"
         {...register("title")}
       />
 
+      {/* Description */}
       <textarea
         placeholder="Description"
         className="w-full rounded border p-2"
         {...register("description")}
       />
 
+      {/* Days */}
       <Input
         type="number"
         placeholder="Days"
@@ -165,6 +172,7 @@ if (selectedCars.length === 0) {
         })}
       />
 
+      {/* Nights */}
       <Input
         type="number"
         placeholder="Nights"
@@ -173,47 +181,52 @@ if (selectedCars.length === 0) {
         })}
       />
 
+      {/* Cover Image */}
       <div>
-  <h3 className="font-semibold mb-2">
-    Cover Image
-  </h3>
+        <h3 className="mb-2 font-semibold">
+          Cover Image
+        </h3>
 
-  <ImageUpload
-    onUpload={(url) => setCoverImage(url)}
-  />
+        <ImageUpload
+          onUpload={(url) => setCoverImage(url)}
+        />
 
-  {coverImage && (
-    <img
-      src={coverImage}
-      className="mt-3 h-32 rounded"
-    />
-  )}
-</div>
+        {coverImage && (
+          <img
+            src={coverImage}
+            alt="Tour cover"
+            className="mt-3 h-32 rounded object-cover"
+          />
+        )}
+      </div>
 
-    <div>
-  <h3 className="font-semibold mb-2">
-    Gallery Images
-  </h3>
-
-  <ImageUpload
-    onUpload={(url) =>
-      setGallery((prev) => [...prev, url])
-    }
-  />
-
-  <div className="grid grid-cols-3 gap-2 mt-3">
-    {gallery.map((image, index) => (
-      <img
-        key={index}
-        src={image}
-        className="h-28 rounded object-cover"
-      />
-    ))}
-  </div>
-</div>
-
+      {/* Gallery Images */}
       <div>
-        <h3 className="font-semibold mb-2">
+        <h3 className="mb-2 font-semibold">
+          Gallery Images
+        </h3>
+
+        <ImageUpload
+          onUpload={(url) =>
+            setGallery((prev) => [...prev, url])
+          }
+        />
+
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {gallery.map((image, index) => (
+            <img
+              key={index}
+              src={image}
+              alt={`Gallery ${index + 1}`}
+              className="h-28 w-full rounded object-cover"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Select Cars */}
+      <div>
+        <h3 className="mb-2 font-semibold">
           Select Cars
         </h3>
 
@@ -223,18 +236,21 @@ if (selectedCars.length === 0) {
             className="flex items-center gap-2"
           >
             <input
-            type="checkbox"
-            value={car.id}
-            checked={selectedCars.includes(car.id)}
-            onChange={(e) => {
+              type="checkbox"
+              value={car.id}
+              checked={selectedCars.includes(car.id)}
+              onChange={(e) => {
                 if (e.target.checked) {
-                setSelectedCars((prev) => [...prev, car.id]);
+                  setSelectedCars((prev) => [
+                    ...prev,
+                    car.id,
+                  ]);
                 } else {
-                setSelectedCars((prev) =>
+                  setSelectedCars((prev) =>
                     prev.filter((id) => id !== car.id)
-                );
+                  );
                 }
-            }}
+              }}
             />
 
             {car.name}
@@ -242,6 +258,7 @@ if (selectedCars.length === 0) {
         ))}
       </div>
 
+      {/* Featured Tour */}
       <label className="flex gap-2">
         <input
           type="checkbox"
@@ -254,14 +271,13 @@ if (selectedCars.length === 0) {
         Featured Tour
       </label>
 
-      <Button
-        type="submit"
-      >
+      {/* Submit */}
+      <Button type="submit">
         {isPending
-            ? "Saving..."
-            : tour
-            ? "Update Tour"
-            : "Save Tour"}
+          ? "Saving..."
+          : tour
+          ? "Update Tour"
+          : "Save Tour"}
       </Button>
     </form>
   );

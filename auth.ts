@@ -1,17 +1,2 @@
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-
-export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [
-    Credentials({
-      credentials: {
-        email: {},
-        password: {},
-      },
-      async authorize() {
-        // We will implement this in the next step.
-        return null;
-      },
-    }),
-  ],
-});
+// Placeholder auth export - authentication is handled via custom JWT in lib/jwt.ts and middleware.ts
+export const auth = null;

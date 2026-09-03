@@ -89,7 +89,7 @@ Please contact me.`;
 
   bookingType: "Round Trip",
 
-  tourName: null,
+  tourName: undefined,
   carName: car,
 
   travelDate: departureDate,

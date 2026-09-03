@@ -8,11 +8,13 @@ import {
   Transmission,
 } from "@prisma/client";
 import { redirect } from "next/navigation";
+import { requireAdmin } from "@/lib/auth-guard";
 
 export async function updateCarAction(
   id: string,
   formData: FormData
 ) {
+  await requireAdmin();
   await prisma.car.update({
     where: {
       id,

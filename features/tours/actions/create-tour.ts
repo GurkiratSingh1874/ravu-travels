@@ -2,8 +2,10 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth-guard";
 
 export async function createTourAction(formData: FormData) {
+  await requireAdmin();
   const carIds = formData.getAll("cars") as string[];
 
   await prisma.tour.create({

@@ -8,7 +8,10 @@ import {
   Transmission,
 } from "@prisma/client";
 
+import { requireAdmin } from "@/lib/auth-guard";
+
 export async function createCarAction(formData: FormData) {
+  await requireAdmin();
   await prisma.car.create({
     data: {
       name: formData.get("name") as string,

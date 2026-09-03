@@ -93,7 +93,7 @@ export default function Navbar() {
 
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="text-white lg:hidden"
+          className={`lg:hidden ${isHome ? "text-white" : "text-slate-800"}`}
         >
           {isOpen ? <X size={30} /> : <Menu size={30} />}
         </button>

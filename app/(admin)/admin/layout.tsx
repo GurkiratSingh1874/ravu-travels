@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import LogoutButton from "@/features/auth/components/logout-button";
 import { verifyToken } from "@/lib/jwt";
+import LogoutButton from "@/features/auth/components/logout-button";
+import { LayoutDashboard, Car, MapPin, ClipboardList, MessageSquare, LogOut } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -23,53 +24,81 @@ export default async function AdminLayout({
     redirect("/login");
   }
 
+  const navLinks = [
+    { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/admin/cars", label: "Cars", icon: Car },
+    { href: "/admin/tours", label: "Tours", icon: MapPin },
+    { href: "/admin/records", label: "Records", icon: ClipboardList },
+    { href: "/admin/contact", label: "Contacts", icon: MessageSquare },
+  ];
+
   return (
-    <div className="flex min-h-screen">
-      <aside className="w-64 bg-black text-white p-6">
-        <h1 className="text-2xl font-bold mb-10">
-          RAVU ADMIN
-        </h1>
+    <div className="flex min-h-screen bg-slate-100">
 
-        <nav className="flex flex-col gap-4">
+      {/* Sidebar */}
+      <aside className="w-64 shrink-0 bg-slate-900 text-white flex flex-col">
+
+        {/* Logo */}
+        <div className="px-6 py-7 border-b border-slate-800">
           <Link href="/admin">
-            Dashboard
+            <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">
+              Admin Panel
+            </p>
+            <h1 className="text-xl font-bold text-amber-400 tracking-wide">
+              RAVU TRAVELS
+            </h1>
           </Link>
+        </div>
 
-          <Link
-            href="/admin/cars"
-            className="rounded p-2 hover:bg-gray-800"
-          >
-            🚗 Cars
-          </Link>
-
-          <Link
-            href="/admin/tours"
-            className="rounded p-2 hover:bg-gray-800"
-          >
-            🗺 Tours
-          </Link>
-
-          <Link
-            href="/admin/records"
-            className="rounded p-2 hover:bg-gray-800"
-          >
-            Records
-          </Link>
-
-          <Link
-            href="/admin/contact"
-            className="rounded p-2 hover:bg-gray-800"
-          >
-            📩 Contact
-          </Link>
-
-          <LogoutButton />
+        {/* Navigation */}
+        <nav className="flex-1 py-6 px-3 space-y-1">
+          {navLinks.map(({ href, label, icon: Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition-all hover:bg-slate-800 hover:text-white"
+            >
+              <Icon size={18} className="shrink-0 text-slate-400" />
+              {label}
+            </Link>
+          ))}
         </nav>
+
+        {/* Footer */}
+        <div className="px-3 py-5 border-t border-slate-800">
+          <div className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-red-400 transition-all hover:bg-red-500/10 cursor-pointer">
+            <LogOut size={18} className="shrink-0" />
+            <LogoutButton />
+          </div>
+          <Link
+            href="/"
+            className="mt-2 flex items-center gap-3 rounded-xl px-4 py-2.5 text-xs text-slate-500 transition hover:text-slate-300"
+          >
+            ← Back to Website
+          </Link>
+        </div>
+
       </aside>
 
-      <main className="flex-1 p-8 bg-gray-100">
-        {children}
+      {/* Main Content */}
+      <main className="flex-1 overflow-auto">
+
+        {/* Top bar */}
+        <div className="border-b border-slate-200 bg-white px-8 py-4">
+          <p className="text-sm text-slate-500">
+            Logged in as Admin &nbsp;·&nbsp;
+            <Link href="/" className="text-amber-600 hover:underline">
+              View Website ↗
+            </Link>
+          </p>
+        </div>
+
+        <div className="p-8">
+          {children}
+        </div>
+
       </main>
+
     </div>
   );
 }

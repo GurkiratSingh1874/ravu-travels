@@ -5,10 +5,11 @@ export default async function RecordsPage() {
   const records = await getRecords();
 
   return (
-    <div className="mx-auto max-w-7xl p-8">
-      <h1 className="mb-8 text-3xl font-bold">
-        Booking Records
-      </h1>
+    <div className="max-w-7xl space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-slate-900">Booking Records</h1>
+        <p className="text-sm text-slate-500 mt-1">All received bookings — One Way, Round Trip and Tours.</p>
+      </div>
 
       <RecordsTable records={records} />
     </div>

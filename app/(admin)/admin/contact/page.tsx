@@ -4,36 +4,55 @@ export default async function ContactPage() {
   const contacts = await getContactQueries();
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">
-        Contact Queries
-      </h1>
+    <div className="max-w-7xl space-y-6">
 
-      <table className="w-full border">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border p-3">Name</th>
-            <th className="border p-3">Phone</th>
-            <th className="border p-3">Email</th>
-            <th className="border p-3">Message</th>
-            <th className="border p-3">Date</th>
-          </tr>
-        </thead>
+      <div>
+        <h1 className="text-2xl font-bold text-slate-900">Contact Queries</h1>
+        <p className="text-sm text-slate-500 mt-1">Messages submitted through the contact form.</p>
+      </div>
 
-        <tbody>
-          {contacts.map((contact) => (
-            <tr key={contact.id}>
-              <td className="border p-2">{contact.name}</td>
-              <td className="border p-2">{contact.phone}</td>
-              <td className="border p-2">{contact.email || "-"}</td>
-              <td className="border p-2">{contact.message}</td>
-              <td className="border p-2">
-                {contact.createdAt.toLocaleDateString()}
-              </td>
+      <div className="overflow-x-auto rounded-2xl bg-white shadow-sm border border-slate-100">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-slate-100 bg-slate-50">
+              <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Name</th>
+              <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Phone</th>
+              <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Email</th>
+              <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Message</th>
+              <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Date</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {contacts.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-5 py-12 text-center text-slate-400">
+                  No contact queries yet.
+                </td>
+              </tr>
+            ) : (
+              contacts.map((contact) => (
+                <tr key={contact.id} className="border-t border-slate-50 hover:bg-slate-50 transition">
+                  <td className="px-5 py-4 font-medium text-slate-800">{contact.name}</td>
+                  <td className="px-5 py-4 text-slate-600">{contact.phone}</td>
+                  <td className="px-5 py-4 text-slate-500">{contact.email || "—"}</td>
+                  <td className="px-5 py-4 text-slate-600 max-w-xs">
+                    <p className="line-clamp-2">{contact.message}</p>
+                  </td>
+                  <td className="px-5 py-4 text-slate-400 whitespace-nowrap">
+                    {contact.createdAt.toLocaleDateString("en-IN", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
     </div>
   );
 }

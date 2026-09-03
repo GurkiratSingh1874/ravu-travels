@@ -1,0 +1,97 @@
+/* ==========================================
+   RAVU TRAVELS — SHARED UI COMPONENTS
+   Reusable classes for consistent styling
+========================================== */
+
+/* Page Header Band — used on all inner pages */
+.page-header {
+  background: #0F172A;
+  padding: 80px 0 60px;
+  text-align: center;
+}
+
+.page-header .label {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #F59E0B;
+  margin-bottom: 12px;
+}
+
+.page-header h1 {
+  font-family: var(--font-playfair);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+/* Form card wrapper — used in OneWay, RoundTrip */
+.form-card {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 8px 40px rgba(15, 23, 42, 0.1);
+  border: 1px solid #f1f5f9;
+}
+
+/* Unified input / select base */
+.field-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748B;
+  margin-bottom: 6px;
+}
+
+.field-input {
+  width: 100%;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 0.95rem;
+  color: #111827;
+  background: #f8fafc;
+  transition: all 0.2s ease;
+  appearance: none;
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: #F59E0B;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12);
+}
+
+/* Primary CTA button */
+.btn-primary {
+  width: 100%;
+  border-radius: 14px;
+  background: #F59E0B;
+  color: white;
+  padding: 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s ease;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: #0F172A;
+  transform: translateY(-2px);
+}
+
+/* Admin stat card accent */
+.stat-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  border-top: 4px solid #F59E0B;
+}

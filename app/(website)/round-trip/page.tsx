@@ -5,12 +5,20 @@ export default async function RoundTripPage() {
   const cars = await getAllCars();
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-6">
-      <h1 className="text-4xl font-bold mb-8">
-        Round Trip Booking
-      </h1>
+    <>
+      {/* Page Header Band */}
+      <div className="page-header">
+        <div className="container">
+          <span className="label">Go & Return in Comfort</span>
+          <h1>Round Trip Booking</h1>
+        </div>
+      </div>
 
-      <RoundTripForm cars={cars} />
-    </div>
+      <div className="container py-16">
+        <div className="max-w-2xl mx-auto">
+          <RoundTripForm cars={cars} />
+        </div>
+      </div>
+    </>
   );
 }

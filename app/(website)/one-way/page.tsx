@@ -5,12 +5,20 @@ export default async function OneWayPage() {
   const cars = await getAllCars();
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-6">
-      <h1 className="text-4xl font-bold mb-8">
-        One Way Taxi Booking
-      </h1>
+    <>
+      {/* Page Header Band */}
+      <div className="page-header">
+        <div className="container">
+          <span className="label">Hassle-Free Travel</span>
+          <h1>One Way Taxi Booking</h1>
+        </div>
+      </div>
 
-      <OneWayForm cars={cars} />
-    </div>
+      <div className="container py-16">
+        <div className="max-w-2xl mx-auto">
+          <OneWayForm cars={cars} />
+        </div>
+      </div>
+    </>
   );
 }

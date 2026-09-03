@@ -1,116 +1,95 @@
 import Link from "next/link";
 import { getDashboardData } from "@/features/dashboard/services/get-dashboard-data";
+import { Car, MapPin, Star, TrendingUp } from "lucide-react";
 
 export default async function DashboardPage() {
   const data = await getDashboardData();
 
+  const stats = [
+    { label: "Total Cars", value: data.totalCars, icon: Car, color: "text-blue-500", bg: "bg-blue-50" },
+    { label: "Total Tours", value: data.totalTours, icon: MapPin, color: "text-emerald-500", bg: "bg-emerald-50" },
+    { label: "Featured Tours", value: data.featuredTours, icon: Star, color: "text-amber-500", bg: "bg-amber-50" },
+  ];
+
   return (
-    <div className="space-y-10">
+    <div className="space-y-8 max-w-6xl">
 
-      <h1 className="text-3xl font-bold">
-        Dashboard
-      </h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        <div className="rounded-lg bg-white p-6 shadow">
-          <p className="text-gray-500">Cars</p>
-          <h2 className="text-4xl font-bold">
-            {data.totalCars}
-          </h2>
-        </div>
-
-        <div className="rounded-lg bg-white p-6 shadow">
-          <p className="text-gray-500">Tours</p>
-          <h2 className="text-4xl font-bold">
-            {data.totalTours}
-          </h2>
-        </div>
-
-        <div className="rounded-lg bg-white p-6 shadow">
-          <p className="text-gray-500">
-            Featured Tours
-          </p>
-
-          <h2 className="text-4xl font-bold">
-            {data.featuredTours}
-          </h2>
-        </div>
-
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
+        <p className="text-sm text-slate-500 mt-1">Overview of RAVU TRAVELS</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* Stat Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {stats.map(({ label, value, icon: Icon, color, bg }) => (
+          <div key={label} className="stat-card flex items-center gap-5">
+            <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${bg}`}>
+              <Icon size={22} className={color} />
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{label}</p>
+              <h2 className="text-3xl font-bold text-slate-900">{value}</h2>
+            </div>
+          </div>
+        ))}
+      </div>
 
-        <div className="rounded-lg bg-white p-6 shadow">
+      {/* Recent Tables */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-          <div className="flex justify-between items-center mb-4">
-
-            <h2 className="text-xl font-bold">
-              Recent Cars
-            </h2>
-
+        {/* Recent Cars */}
+        <div className="rounded-2xl bg-white shadow-sm border border-slate-100 overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+            <h2 className="font-semibold text-slate-800">Recent Cars</h2>
             <Link
               href="/admin/cars"
-              className="text-blue-600"
+              className="text-xs font-semibold text-amber-600 hover:underline"
             >
-              View All
+              View All →
             </Link>
-
           </div>
-
-          <div className="space-y-3">
-
-            {data.recentCars.map((car) => (
-              <div
-                key={car.id}
-                className="flex justify-between border-b pb-2"
-              >
-                <span>{car.name}</span>
-
-                <span className="text-gray-500">
-                  {car.category}
-                </span>
-              </div>
-            ))}
-
+          <div className="divide-y divide-slate-50">
+            {data.recentCars.length === 0 ? (
+              <p className="px-6 py-8 text-sm text-center text-slate-400">No cars yet.</p>
+            ) : (
+              data.recentCars.map((car) => (
+                <div key={car.id} className="flex items-center justify-between px-6 py-3.5">
+                  <span className="text-sm font-medium text-slate-800">{car.name}</span>
+                  <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-500">
+                    {car.category}
+                  </span>
+                </div>
+              ))
+            )}
           </div>
-
         </div>
 
-        <div className="rounded-lg bg-white p-6 shadow">
-
-          <div className="flex justify-between items-center mb-4">
-
-            <h2 className="text-xl font-bold">
-              Recent Tours
-            </h2>
-
+        {/* Recent Tours */}
+        <div className="rounded-2xl bg-white shadow-sm border border-slate-100 overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+            <h2 className="font-semibold text-slate-800">Recent Tours</h2>
             <Link
               href="/admin/tours"
-              className="text-blue-600"
+              className="text-xs font-semibold text-amber-600 hover:underline"
             >
-              View All
+              View All →
             </Link>
-
           </div>
-
-          <div className="space-y-3">
-
-            {data.recentTours.map((tour) => (
-              <div
-                key={tour.id}
-                className="flex justify-between border-b pb-2"
-              >
-                <span>{tour.title}</span>
-
-                <span>
-                  {tour.days} Days
-                </span>
-              </div>
-            ))}
-
+          <div className="divide-y divide-slate-50">
+            {data.recentTours.length === 0 ? (
+              <p className="px-6 py-8 text-sm text-center text-slate-400">No tours yet.</p>
+            ) : (
+              data.recentTours.map((tour) => (
+                <div key={tour.id} className="flex items-center justify-between px-6 py-3.5">
+                  <span className="text-sm font-medium text-slate-800">{tour.title}</span>
+                  <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-600">
+                    {tour.days} Days
+                  </span>
+                </div>
+              ))
+            )}
           </div>
-
         </div>
 
       </div>

@@ -3,8 +3,6 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-import TextField from "@/components/ui/TextField";
-import Select from "@/components/ui/newSelect";
 import { createRecord } from "@/features/records/actions/create-record";
 
 type Car = {
@@ -105,67 +103,84 @@ Please contact me.`;
   }
 
   return (
-    <div className="mt-24 rounded-[32px] bg-white p-10 shadow-2xl">
-      <h2 className="heading mb-10 text-5xl font-bold">
+    <div className="form-card">
+      <p className="text-xs font-semibold uppercase tracking-widest text-amber-500 mb-1">
+        Secure Your Spot
+      </p>
+      <h2 className="heading mb-1 text-3xl font-bold">
         Book This Tour
       </h2>
+      <p className="text-slate-500 text-sm mb-8">
+        Fill in your details and we'll confirm via WhatsApp.
+      </p>
 
-      <TextField
-        placeholder="Your Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+      <div className="space-y-5">
 
-      <div className="h-4" />
+        <div>
+          <label className="field-label">Your Name</label>
+          <input
+            className="field-input"
+            placeholder="e.g. Gurkirat Singh"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
 
-      <TextField
-        placeholder="Phone Number"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-      />
+        <div>
+          <label className="field-label">Phone Number</label>
+          <input
+            className="field-input"
+            placeholder="10-digit mobile number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+        </div>
 
-      <div className="h-4" />
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label className="field-label">Travel Date</label>
+            <input
+              type="date"
+              className="field-input"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="field-label">Pickup Location</label>
+            <input
+              className="field-input"
+              placeholder="e.g. Chandigarh"
+              value={pickup}
+              onChange={(e) => setPickup(e.target.value)}
+            />
+          </div>
+        </div>
 
-      <TextField
-        type="date"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-      />
-
-      <div className="h-4" />
-
-      <TextField
-        placeholder="Pickup Location"
-        value={pickup}
-        onChange={(e) => setPickup(e.target.value)}
-      />
-
-      <div className="h-4" />
-
-      <Select
-        value={car}
-        onChange={(e) => setCar(e.target.value)}
-      >
-        <option value="">Select Car</option>
-
-        {cars.map((item) => (
-          <option
-            key={item.id}
-            value={item.name}
+        <div>
+          <label className="field-label">Select Car</label>
+          <select
+            className="field-input"
+            value={car}
+            onChange={(e) => setCar(e.target.value)}
           >
-            {item.name}
-          </option>
-        ))}
-      </Select>
+            <option value="">Choose a car</option>
+            {cars.map((item) => (
+              <option key={item.id} value={item.name}>
+                {item.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <div className="h-8" />
+        <button
+          onClick={bookNow}
+          className="btn-primary"
+        >
+          📲 Book on WhatsApp
+        </button>
 
-      <button
-        onClick={bookNow}
-        className="w-full rounded-2xl bg-amber-500 py-4 text-lg font-semibold text-white transition hover:bg-slate-900"
-      >
-        Book on WhatsApp
-      </button>
+      </div>
     </div>
   );
 }

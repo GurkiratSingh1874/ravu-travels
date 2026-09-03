@@ -20,14 +20,6 @@ type Car = {
 
 type Props = {
   cars: Car[];
-};
-
-type Props = {
-  cars: {
-    id: string;
-    name: string;
-  }[];
-
   tour?: any;
 };
 
